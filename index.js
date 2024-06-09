@@ -3,15 +3,12 @@ import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import axios from 'axios';
 
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
-app.use((req, res, next) => {
-    res.setHeader('Acess-Control-Allow-Origin', 'http://localhost:3000')
-    res.setHeader('Acess-Control-Allow-Methods', 'GET, POST, PUT, PATCH,  DELETE')
-    res.setHeader('Acess-Control-Allow-Headers', 'Content-Type, Authorization')
-});
+app.use(cors());
 
 const JWT_SECRET = 'admin';
 
@@ -57,7 +54,6 @@ app.post('/colaborador', async (req, res) => {
     }
 });
 
-
 app.post('/colaboradores', async (req, res) => {
     try {
         const { username, name, telefone, email } = req.body;
@@ -92,9 +88,6 @@ const generateSimplePassword = () => {
     }
     return password;
 };
-
-
-
 
 // Rota para listar todos os colaboradores
 app.get('/colaboradores', async (req, res) => {
@@ -167,6 +160,7 @@ app.delete('/colaboradores/:id', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Erro ao deletar colaborador.' });
     }
 });
+
 const port = process.env.PORT || 3001
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
