@@ -8,7 +8,7 @@ import axios from 'axios';
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors())
 
 const JWT_SECRET = 'admin';
 
