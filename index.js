@@ -7,8 +7,11 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
-app.use(cors());
-const port = process.env.PORT || 3000
+app.use((req, res, next) => {
+    res.setHeader('Acess-Control-Allow-Origin', 'http://localhost:3001')
+    res.setHeader('Acess-Control-Allow-Methods', 'GET, POST, PUT, PATCH,  DELETE')
+    res.setHeader('Acess-Control-Allow-Headers', 'Content-Type, Authorization')
+});
 
 const JWT_SECRET = 'admin';
 
@@ -164,7 +167,7 @@ app.delete('/colaboradores/:id', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Erro ao deletar colaborador.' });
     }
 });
-
+const port = process.env.PORT || 3001
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
