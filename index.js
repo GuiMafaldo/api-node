@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 app.use((req, res, next) => {
-    res.setHeader('Acess-Control-Allow-Origin', 'http://localhost:3001')
+    res.setHeader('Acess-Control-Allow-Origin', 'http://localhost:3000')
     res.setHeader('Acess-Control-Allow-Methods', 'GET, POST, PUT, PATCH,  DELETE')
     res.setHeader('Acess-Control-Allow-Headers', 'Content-Type, Authorization')
 });
