@@ -13,8 +13,63 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
+model Colaborador {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  username    String @unique
-  password    Int
+  name    String?
+  telefone  String
+  email   String  @unique
+  password   String
+  username   String @unique
 }
+
+model Fornecedores {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId
+  codigo  String @unique
+  nome    String @unique
+  contatoname   String
+  endereco      String
+  cidade   String
+  telefone   Int
+  estado   String
+  bairro  String
+  site   String?
+  email  String @unique
+  cnpj   String
+  inscricaostd   String
+  cep   Int
+}
+
+model Client {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId
+  nome  String
+  tel  Int
+  email String?
+  endereco  String
+  cidade String
+}
+
+model Notafiscalent {
+  id  String   @id @default(auto()) @map("_id") @db.ObjectId
+  tiponf   String
+  fornecedor   Int
+  numeronf  Int @unique
+  datanf  Int
+  serie   Int
+  uforigin  String
+  especiedoc  String
+  emissaodata String
+}
+
+model Notafiscalsaida {
+  id    String   @id @default(auto()) @map("_id") @db.ObjectId
+  numeronf  Int
+  cliente  String
+  cnpj  String?
+  inscricao  String
+  endereco  String
+  numerocasa  Int
+  cep  Int
+  uf   String
+  numerotel  Int?
+  transporte  String
+} 
