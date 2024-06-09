@@ -8,7 +8,9 @@ import axios from 'axios';
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+    origin: true
+}))
 
 const JWT_SECRET = 'admin';
 
@@ -54,30 +56,36 @@ app.post('/colaborador', async (req, res) => {
     }
 });
 
-app.post('/colaboradores', async (req, res) => {
+app.post('/colaborador', async (req, res) => {
     try {
-        const { username, name, telefone, email } = req.body;
+        const { username, password } = req.body;
 
-        // Gerar senha simples com 8 caracteres
-        const password = generateSimplePassword();
-
-        // Criar novo colaborador com senha simples
-        const newColaborador = await prisma.colaborador.create({
-            data: {
-                username,
-                password, // Armazenar senha simples sem criptografia
-                name,
-                telefone,
-                email
-            },
+        // Buscar o colaborador pelo username no banco de dados
+        const colaborador = await prisma.colaborador.findUnique({
+            where: {
+                username
+            }
         });
 
-        res.status(201).json(newColaborador);
+        // Verificar se o colaborador existe
+        if (!colaborador) {
+            return res.status(401).json({ error: 'Usuário não encontrado.' });
+        }
+
+        // Verificar se a senha está correta
+        if (password !== colaborador.password) {
+            return res.status(401).json({ error: 'Senha incorreta.' });
+        }
+
+        // Se chegou até aqui, o usuário está autenticado com sucesso
+        res.status(200).json(colaborador);
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Erro ao criar colaborador.' });
+        res.status(500).json({ error: 'Erro ao autenticar o usuário.' });
     }
 });
+
 
 const generateSimplePassword = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
